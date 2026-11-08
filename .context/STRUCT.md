@@ -1,41 +1,37 @@
-project/
+# 저장소 구조
+
+## 배포 저장소 (bunx skills 패키지)
+
+```
+context/
 │
-├── SKILL.md                     # bunx skills 패키지 매니페스트 (context-init)
+├── SKILL.md                     # context-init 매니페스트
 ├── scripts/
 │   └── init-context.sh          # 부트스트랩 스크립트
 │
-├── AGENTS.md                    # AI 진입 규칙
+├── template/                    # 배포 페이로드 (에이전트 수정 금지)
+│   ├── AGENTS.md
+│   └── .context/
+│       ├── RULES.md
+│       ├── INDEX.md
+│       ├── CURRENT.md
+│       └── STRUCT.md
 │
-├── .context/
-│   ├── RULES.md                 # 컨텍스트 관리 규칙
-│   ├── INDEX.md                 # 전체 지식 색인
-│   ├── PROJECT.md               # 프로젝트 개요
-│   ├── DEVELOPMENT.md           # 개발 환경 및 코딩 규칙
-│   ├── CURRENT.md               # 현재 진행 상태 및 작업 인계
-│   │
-│   ├── architecture/
-│   │   ├── overview.md
-│   │   └── decisions/
-│   │       ├── ADR-001.md
-│   │       └── ADR-002.md
-│   │
-│   ├── modules/
-│   │   ├── frontend.md
-│   │   ├── backend.md
-│   │   └── database.md
-│   │
-│   ├── tasks/
-│   │   ├── 2026-11-08-task-name.md
-│   │   └── 2026-11-09-task-name.md
-│   │
-│   ├── problems/
-│   │   ├── index.md
-│   │   └── troubleshooting.md
-│   │
-│   ├── knowledge/
-│   │   ├── index.md
-│   │   ├── patterns.md
-│   │   └── lessons.md
-│   │
-│   └── archive/
-│       └── README.md
+└── .context/                    # 이 저장소 자체 작업 컨텍스트
+    ├── RULES.md
+    ├── INDEX.md
+    ├── CURRENT.md
+    ├── STRUCT.md
+    └── tasks/
+        └── 2026-11-08-bunx-skills-context-bootstrap.md
+```
+
+## 설치 결과 (새 프로젝트)
+
+```
+project/
+├── AGENTS.md                    # template/AGENTS.md 복사
+└── .context/                    # template/.context 복사
+```
+
+`scripts/init-context.sh`는 대상 프로젝트에 `.context/`가 없을 때만 복사한다.

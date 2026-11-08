@@ -2,7 +2,7 @@
 # Bootstrap .context/ + AGENTS.md into a project, delivered through `bunx skills`.
 #
 # The skill package (this repository) is installed with the `skills` CLI, then its
-# payload (.context/ and AGENTS.md) is materialised at the project root. The skill
+# `template/` payload is materialised at the project root. The temporary skill
 # install is removed afterwards unless --keep-skill is given.
 #
 # Usage: scripts/init-context.sh [options] [target-dir]
@@ -22,14 +22,16 @@ usage() {
   cat <<EOF
 Usage: $(basename "$0") [options] [target-dir]
 
-Install the $SKILL_NAME skill with \`bunx skills\` and copy its payload
-(.context/ + AGENTS.md) into target-dir (default: .).
+Install the $SKILL_NAME skill with \`bunx skills\` and copy its template payload
+(template/.context + template/AGENTS.md) into target-dir (default: .).
 Does nothing when target-dir/.context already exists.
 
 Options:
   -s, --source <spec>  skills source (owner/repo, URL, or path).
                        Default: this repository, or \$CONTEXT_SKILL_SOURCE.
-      --keep-skill     Keep the installed skill under $AGENT/skills.
+  -a, --agent <name>   Agent directory to install to (default: claude-code).
+                       Never use '*' here: it installs ~79 agent dirs.
+      --keep-skill     Keep the installed skill under \$AGENT/skills.
   -h, --help           Show this help.
 EOF
 }
@@ -38,6 +40,8 @@ while [ $# -gt 0 ]; do
   case "$1" in
     -s|--source)      [ $# -ge 2 ] || die "--source needs a value"; SOURCE="$2"; shift 2 ;;
     --source=*)       SOURCE="${1#*=}"; shift ;;
+    -a|--agent)       [ $# -ge 2 ] || die "--agent needs a value"; AGENT="$2"; shift 2 ;;
+    --agent=*)        AGENT="${1#*=}"; shift ;;
     --keep-skill)     KEEP_SKILL=1; shift ;;
     -h|--help)        usage; exit 0 ;;
     --)               shift; break ;;
@@ -59,43 +63,77 @@ if [ -e "$CONTEXT_DIR" ]; then
 fi
 
 STAGING=""
-cleanup() { [ -n "$STAGING" ] && rm -rf "$STAGING"; }
+NEW_DIRS=""
+LOCK_PREEXISTED=0
+if [ -e "$TARGET/skills-lock.json" ]; then LOCK_PREEXISTED=1; fi
+
+prune_empty_ancestors() {
+  local parent
+  parent="$(dirname "$1")"
+  while [ "$parent" != "$TARGET" ] && [ "${parent#"$TARGET"/}" != "$parent" ]; do
+    rmdir "$parent" 2>/dev/null || break
+    parent="$(dirname "$parent")"
+  done
+}
+
+cleanup() {
+  local status=$?
+  [ -n "$STAGING" ] && rm -rf -- "$STAGING"
+  if [ "$KEEP_SKILL" -eq 0 ]; then
+    # `bunx skills remove` reports success while leaving the universal copy
+    # (`<agent>/skills/<skill>`, `skills/<skill>`) and skills-lock.json behind,
+    # so remove exactly the directories this run created.
+    if [ -n "$NEW_DIRS" ]; then
+      while IFS= read -r dir; do
+        [ -n "$dir" ] || continue
+        rm -rf -- "$dir"
+        prune_empty_ancestors "$dir"
+      done <<< "$NEW_DIRS"
+    fi
+    if [ "$LOCK_PREEXISTED" -eq 0 ] && [ -f "$TARGET/skills-lock.json" ]; then
+      rm -f "$TARGET/skills-lock.json"
+    fi
+  fi
+  exit "$status"
+}
 trap cleanup EXIT
 
-HAD_LOCK=0
-[ -e "$TARGET/skills-lock.json" ] && HAD_LOCK=1
+# Directories that already existed; only newly created ones are removed later.
+DA_SNAPSHOT="$(find "$TARGET" -type d -name "$SKILL_NAME" 2>/dev/null | sort || true)"
 
 log "installing skill '$SKILL_NAME' from '$SOURCE'"
 ( cd "$TARGET" && bunx skills add "$SOURCE" --skill "$SKILL_NAME" --agent "$AGENT" --copy -y ) \
   || die "bunx skills add failed"
 
-SKILL_DIR=""
-for candidate in "$TARGET/.agents/skills/$SKILL_NAME" "$TARGET/.claude/skills/$SKILL_NAME"; do
-  if [ -d "$candidate/.context" ]; then SKILL_DIR="$candidate"; break; fi
-done
-[ -n "$SKILL_DIR" ] || die "installed payload not found (looked for .context under .agents/skills and .claude/skills)"
+AFTER_SNAPSHOT="$(find "$TARGET" -type d -name "$SKILL_NAME" 2>/dev/null | sort || true)"
+NEW_DIRS="$(comm -13 <(printf '%s\n' "$DA_SNAPSHOT") <(printf '%s\n' "$AFTER_SNAPSHOT"))"
 
-[ -f "$SKILL_DIR/.context/RULES.md" ] || die "payload is missing .context/RULES.md"
+SKILL_DIR=""
+shopt -s nullglob dotglob
+for candidate in "$TARGET"/*/skills/"$SKILL_NAME"; do
+  if [ -d "$candidate/template/.context" ]; then SKILL_DIR="$candidate"; break; fi
+done
+shopt -u nullglob dotglob
+[ -n "$SKILL_DIR" ] || die "installed payload not found (searched <agent>/skills/$SKILL_NAME/template)"
+
+PAYLOAD_DIR="$SKILL_DIR/template"
+[ -f "$PAYLOAD_DIR/.context/RULES.md" ] || die "payload is missing template/.context/RULES.md"
+[ -f "$PAYLOAD_DIR/AGENTS.md" ] || die "payload is missing template/AGENTS.md"
 
 STAGING="$(mktemp -d "$TARGET/.context-init.XXXXXX")"
-cp -R "$SKILL_DIR/.context" "$STAGING/.context"
+cp -R "$PAYLOAD_DIR/.context" "$STAGING/.context"
 mv "$STAGING/.context" "$CONTEXT_DIR"
 log "created $CONTEXT_DIR"
 
 if [ -e "$AGENTS_FILE" ]; then
   log "keep: $AGENTS_FILE already exists"
 else
-  cp "$SKILL_DIR/AGENTS.md" "$AGENTS_FILE"
+  cp "$PAYLOAD_DIR/AGENTS.md" "$AGENTS_FILE"
   log "created $AGENTS_FILE"
 fi
 
-if [ "$KEEP_SKILL" -eq 0 ]; then
-  ( cd "$TARGET" && bunx skills remove "$SKILL_NAME" --agent "$AGENT" -y >/dev/null )
-  rmdir "$TARGET/.claude/skills" "$TARGET/.claude" "$TARGET/.agents/skills" "$TARGET/.agents" 2>/dev/null || true
-  if [ "$HAD_LOCK" -eq 0 ] && [ -f "$TARGET/skills-lock.json" ] \
-     && grep -qE '"skills"[[:space:]]*:[[:space:]]*\{\}' "$TARGET/skills-lock.json"; then
-    rm -f "$TARGET/skills-lock.json"
-  fi
+if [ "$KEEP_SKILL" -eq 0 ] && [ "$LOCK_PREEXISTED" -eq 1 ] && [ -f "$TARGET/skills-lock.json" ]; then
+  log "note: $TARGET/skills-lock.json still lists '$SKILL_NAME'; remove it manually if unwanted"
 fi
 
 log "done"
