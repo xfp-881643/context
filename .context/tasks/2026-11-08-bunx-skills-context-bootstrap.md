@@ -81,3 +81,7 @@
 | 잘못된 URL | exit 1, 잔여물 없음 |
 | 기존 `.context` | skip, exit 0 |
 | 기존 `AGENTS.md` | 보존 |
+
+## Update: SKILL.md 삭제
+
+전달 경로가 `install.sh` 하나로 정리되어 스킬 매니페스트는 불필요해졌다. `SKILL.md` 삭제, README/STRUCT의 저장소 구조 갱신.

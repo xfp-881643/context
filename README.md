@@ -76,7 +76,7 @@ context/
 ├── template/         # 배포 페이로드 (수정 금지)
 │   ├── AGENTS.md
 │   └── .context/
-├── SKILL.md          # bunx skills 사용자를 위한 선택 매니페스트
+├── README.md         # 사용법
 └── .context/         # 이 저장소 자체 작업 컨텍스트
 ```
 
