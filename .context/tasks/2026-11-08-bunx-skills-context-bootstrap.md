@@ -61,3 +61,23 @@
 | `.context` 존재 | skip, exit 0 |
 | 기존 `AGENTS.md` | 보존 |
 | `--keep-skill` / `-a '*'` | 각각 유지 / 전체 정리 확인 |
+
+## Update: bunx skills → curl install.sh
+
+`bunx skills`는 v1.7.6에서 `.claude/skills`를 반드시 생성하며 이를 막는 옵션이 없다. 설치 경로를 통제할 수 없어 전달 수단을 GitHub tarball로 교체했다.
+
+- `install.sh` 추가: `curl -fsSL .../install.sh | bash`
+  - 스크립트 파일로 실행하면 자기 디렉터리의 `template/` 사용 (네트워크 없음)
+  - 파이프 실행이면 `https://github.com/<repo>/archive/<ref>.tar.gz` 다운로드 후 `template/` 추출
+  - `-s/--source`, `--repo`, `--ref`, `CONTEXT_TARBALL_URL` 지원
+- `scripts/init-context.sh` 삭제 (bunx skills 의존 제거)
+- `SKILL.md`는 선택 경로로 유지, 실행 명령을 `install.sh`로 변경
+
+### Verification
+| 시나리오 | 결과 |
+| --- | --- |
+| `bash install.sh <dir>` | `template/`와 `diff -r` 일치, exit 0 |
+| 파이프 + tarball | 동일 결과, exit 0 |
+| 잘못된 URL | exit 1, 잔여물 없음 |
+| 기존 `.context` | skip, exit 0 |
+| 기존 `AGENTS.md` | 보존 |

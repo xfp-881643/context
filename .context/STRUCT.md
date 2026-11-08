@@ -1,13 +1,12 @@
 # 저장소 구조
 
-## 배포 저장소 (bunx skills 패키지)
+## 배포 저장소
 
 ```
 context/
 │
-├── SKILL.md                     # context-init 매니페스트
-├── scripts/
-│   └── init-context.sh          # 부트스트랩 스크립트
+├── install.sh                   # 설치 스크립트 (local 실행 / curl 파이프)
+├── SKILL.md                     # 선택: bunx skills 사용자를 위한 매니페스트
 │
 ├── template/                    # 배포 페이로드 (에이전트 수정 금지)
 │   ├── AGENTS.md
@@ -34,4 +33,4 @@ project/
 └── .context/                    # template/.context 복사
 ```
 
-`scripts/init-context.sh`는 대상 프로젝트에 `.context/`가 없을 때만 복사한다.
+`install.sh`는 대상 프로젝트에 `.context/`가 없을 때만 복사한다.

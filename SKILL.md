@@ -10,10 +10,14 @@ This skill ships the canonical `.context/` knowledge base (rules, index, current
 ## What to do
 
 - If the project already has `.context/`, do NOT copy anything. Read `.context/RULES.md`, `.context/INDEX.md`, and `.context/CURRENT.md` and follow them.
-- If `.context/` is missing, run the bootstrap script from this skill directory:
+- If `.context/` is missing, run the installer:
 
   ```bash
-  bash scripts/init-context.sh <project-dir>
+  # from a checkout / this skill directory (uses template/ locally)
+  bash install.sh <project-dir>
+
+  # or standalone
+  curl -fsSL https://raw.githubusercontent.com/xfp-881643/context/master/install.sh | bash
   ```
 
   It copies `template/.context` and `template/AGENTS.md` into the project root.
