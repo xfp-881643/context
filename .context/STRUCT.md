@@ -6,6 +6,7 @@
 context/
 │
 ├── install.sh                   # 설치 스크립트 (local 실행 / curl 파이프)
+├── README.md                    # 사용법
 ├── SKILL.md                     # 선택: bunx skills 사용자를 위한 매니페스트
 │
 ├── template/                    # 배포 페이로드 (에이전트 수정 금지)
