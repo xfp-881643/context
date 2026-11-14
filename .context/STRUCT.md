@@ -5,16 +5,14 @@
 ```
 context/
 │
-├── install.sh                   # 설치 스크립트 (local 실행 / curl 파이프)
+├── install.sh                   # ~/.agents 설치 스크립트 (local 실행 / curl 파이프)
 ├── README.md                    # 사용법
+├── AGENTS.md                    # 이 저장소 자체 진입 규칙
 │
-├── template/                    # 배포 페이로드 (에이전트 수정 금지)
-│   ├── AGENTS.md
-│   └── .context/
-│       ├── RULES.md
-│       ├── INDEX.md
-│       ├── CURRENT.md
-│       └── STRUCT.md
+├── home/
+│   └── .agents/
+│       └── rules/
+│           └── context.md       # 전역 alwaysApply 컨텍스트 규칙
 │
 └── .context/                    # 이 저장소 자체 작업 컨텍스트
     ├── RULES.md
@@ -22,15 +20,16 @@ context/
     ├── CURRENT.md
     ├── STRUCT.md
     └── tasks/
-        └── 2026-11-08-bunx-skills-context-bootstrap.md
+        ├── 2026-11-08-bunx-skills-context-bootstrap.md
+        └── 2026-11-14-global-agents-context-rules.md
 ```
 
-## 설치 결과 (새 프로젝트)
+## 설치 결과 (`~/.agents`)
 
 ```
-project/
-├── AGENTS.md                    # template/AGENTS.md 복사
-└── .context/                    # template/.context 복사
+~/.agents/
+└── rules/
+    └── context.md               # home/.agents/rules/context.md 복사 (기존 skills/ 등 보존)
 ```
 
-`install.sh`는 대상 프로젝트에 `.context/`가 없을 때만 복사한다.
+프로젝트에는 정적 규칙을 복사하지 않으며, 에이전트가 작업 시 `.context/`(`INDEX.md`, `CURRENT.md`, `tasks/` 등)를 직접 작성·유지한다.

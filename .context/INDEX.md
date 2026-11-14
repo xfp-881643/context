@@ -27,11 +27,12 @@
 
 ## Recent Tasks
 <!-- Keep the latest 5-10 meaningful tasks here. -->
+- [2026-11-14 전역 .agents 컨텍스트 규칙 전환](tasks/2026-11-14-global-agents-context-rules.md)
 - [2026-11-08 bunx skills 기반 .context 부트스트랩](tasks/2026-11-08-bunx-skills-context-bootstrap.md)
 
 ## Active Issues
 <!-- Link unresolved issues here. -->
 
 ## Maintenance
-- Last reviewed: YYYY-MM-DD
+- Last reviewed: 2026-11-14
 - Known obsolete documents: None

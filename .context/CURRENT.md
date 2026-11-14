@@ -12,6 +12,7 @@ Possible values:
 No active task.
 
 ## Recent Progress
+- 2026-11-14: `template/` 제거 및 전역 규칙을 `home/.agents/rules/context.md`(`alwaysApply: true`)로 통합. `install.sh`를 `~/.agents/` 복사(기존 파일 보존)로 전환하고 빈 프로젝트에서 `omp` 자동 `.context/` 작성 검증 완료.
 - 2026-11-08: `bunx skills` 전달 방식의 `.context` 부트스트랩 추가 (`SKILL.md`, `scripts/init-context.sh`). 4가지 시나리오 검증 완료.
 - 2026-11-08: 페이로드를 `template/`로 분리(에이전트 수정 격리), 실패 시에도 설치 흔적 정리.
 - 2026-11-08: README.md 사용법 추가, SKILL.md 삭제(전달 경로 install.sh 단일화).
@@ -25,11 +26,11 @@ None.
 - None.
 
 ## Next Actions
-- No pending actions.
+- 변경 사항 커밋 및 원격 저장소 푸시.
 
 ## Important Context
-- [Project Overview](PROJECT.md)
-- [Architecture](architecture/overview.md)
+- [STRUCT](STRUCT.md)
+- [RULES](RULES.md)
 
 ## Last Updated
-YYYY-MM-DD
+2026-11-14

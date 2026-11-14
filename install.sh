@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# Install .context/ and AGENTS.md into a project.
+# Install global .agents rules into ~/.agents.
 #
 #   curl -fsSL https://raw.githubusercontent.com/xfp-881643/context/master/install.sh | bash
 #   bash install.sh [options] [target-dir]
 #
-# Copies template/.context and template/AGENTS.md into the target and does
-# nothing when the target already has a .context/ directory.
+# Copies home/.agents/ contents into target-dir (default: ~/.agents),
+# preserving existing files such as skills/.
 set -euo pipefail
 
 REPO="xfp-881643/context"
 REF="master"
-TARGET="."
+TARGET="${HOME}/.agents"
 SOURCE_DIR=""
 
 die() { printf 'error: %s\n' "$*" >&2; exit 1; }
@@ -20,11 +20,11 @@ usage() {
   cat <<USAGE
 Usage: install.sh [options] [target-dir]
 
-Copy template/.context and template/AGENTS.md into target-dir (default: .).
-Does nothing when target-dir/.context already exists.
+Copy home/.agents/ into target-dir (default: ~/.agents).
+Existing unrelated files (such as skills/) are preserved.
 
 Options:
-  -s, --source <dir>  Use a local checkout instead of downloading (must contain template/).
+  -s, --source <dir>  Use a local checkout instead of downloading (must contain home/.agents/).
       --repo <owner/name>  GitHub repository (default: $REPO).
       --ref <ref>          Branch or tag (default: $REF).
   -h, --help               Show this help.
@@ -49,16 +49,6 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-mkdir -p "$TARGET"
-TARGET="$(cd "$TARGET" && pwd)"
-CONTEXT_DIR="$TARGET/.context"
-AGENTS_FILE="$TARGET/AGENTS.md"
-
-if [ -e "$CONTEXT_DIR" ]; then
-  log "skip: $CONTEXT_DIR already exists"
-  exit 0
-fi
-
 STAGING=""
 WORK_DIR=""
 cleanup() {
@@ -74,13 +64,13 @@ if [ -z "$SOURCE_DIR" ]; then
   self="${BASH_SOURCE[0]:-}"
   if [ -n "$self" ] && [ -f "$self" ]; then
     candidate="$(cd "$(dirname "$self")" && pwd)"
-    if [ -d "$candidate/template/.context" ]; then SOURCE_DIR="$candidate"; fi
+    if [ -d "$candidate/home/.agents" ]; then SOURCE_DIR="$candidate"; fi
   fi
 fi
 
 if [ -n "$SOURCE_DIR" ]; then
-  [ -d "$SOURCE_DIR/template/.context" ] || die "$SOURCE_DIR/template/.context not found"
-  PAYLOAD_DIR="$SOURCE_DIR/template"
+  [ -d "$SOURCE_DIR/home/.agents" ] || die "$SOURCE_DIR/home/.agents not found"
+  PAYLOAD_DIR="$SOURCE_DIR/home/.agents"
 else
   command -v curl >/dev/null 2>&1 || die "curl not found"
   command -v tar >/dev/null 2>&1 || die "tar not found"
@@ -93,26 +83,20 @@ else
 
   PAYLOAD_DIR=""
   shopt -s nullglob
-  for dir in "$WORK_DIR"/*/template; do
-    if [ -f "$dir/.context/RULES.md" ]; then PAYLOAD_DIR="$dir"; break; fi
+  for dir in "$WORK_DIR"/*/home/.agents; do
+    if [ -f "$dir/rules/context.md" ]; then PAYLOAD_DIR="$dir"; break; fi
   done
   shopt -u nullglob
-  [ -n "$PAYLOAD_DIR" ] || die "template/.context not found in archive of $REPO@$REF"
+  [ -n "$PAYLOAD_DIR" ] || die "home/.agents not found in archive of $REPO@$REF"
 fi
 
-[ -f "$PAYLOAD_DIR/.context/RULES.md" ] || die "payload is missing .context/RULES.md"
-[ -f "$PAYLOAD_DIR/AGENTS.md" ] || die "payload is missing AGENTS.md"
+[ -f "$PAYLOAD_DIR/rules/context.md" ] || die "payload is missing rules/context.md"
 
-STAGING="$(mktemp -d "$TARGET/.context-install.XXXXXX")"
-cp -R "$PAYLOAD_DIR/.context" "$STAGING/.context"
-mv "$STAGING/.context" "$CONTEXT_DIR"
-log "created $CONTEXT_DIR"
+STAGING="$(mktemp -d)"
+cp -R "$PAYLOAD_DIR" "$STAGING/.agents"
 
-if [ -e "$AGENTS_FILE" ]; then
-  log "keep: $AGENTS_FILE already exists"
-else
-  cp "$PAYLOAD_DIR/AGENTS.md" "$AGENTS_FILE"
-  log "created $AGENTS_FILE"
-fi
-
+mkdir -p "$TARGET"
+TARGET="$(cd "$TARGET" && pwd)"
+cp -Rf "$STAGING/.agents/." "$TARGET/"
+log "installed into $TARGET"
 log "done"
