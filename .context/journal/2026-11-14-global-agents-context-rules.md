@@ -54,5 +54,5 @@
 - 원격 GitHub 저장소에 커밋·푸시 후 `curl ... | bash` 경로 최종 확인 필요(로컬 push 전).
 
 ## Related documents
-- [STRUCT.md](../STRUCT.md)
-- [RULES.md](../RULES.md)
+- [ARCHITECTURE.md](../ARCHITECTURE.md)
+- [CONVENTIONS.md](../CONVENTIONS.md)
