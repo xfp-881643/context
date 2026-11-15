@@ -1,11 +1,11 @@
 ---
-description: Templates and schemas for .context/ documents (INDEX, PROJECT, ARCHITECTURE, GLOSSARY, STATE, CONVENTIONS, DECISIONS, journal, modules).
+description: Templates and schemas for .context/ documents (INDEX, PROJECT, ARCHITECTURE, GLOSSARY, CONVENTIONS, DECISIONS, journal, modules).
 globs: .context/**
 ---
 
 # Context Reference
 
-Read this when creating or updating `.context/` documents. Write the actual documents in Korean; the templates below are in English for the agent, so translate headings and placeholder text to Korean when writing. Keep code identifiers, paths, commands, and external API names as-is.
+Read this when creating or updating `.context/` documents. Write `journal/` documents in Korean, translating the journal templates below, and all other `.context/` documents in English. Keep code identifiers, paths, commands, and external API names as-is.
 
 ## INDEX.md
 
@@ -19,7 +19,6 @@ The reading map. List files and when to read them. Do not list tasks here.
 | [PROJECT.md](PROJECT.md) | Purpose, direction, non-goals | Always | 2026-11-15 |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System map, data flow, invariants | Always | 2026-11-15 |
 | [GLOSSARY.md](GLOSSARY.md) | Terms and contracts | Always | 2026-11-15 |
-| [STATE.md](STATE.md) | Current focus, risks, next | Always | 2026-11-15 |
 | [CONVENTIONS.md](CONVENTIONS.md) | Build, test, style, constraints | When work style matters | 2026-11-15 |
 | [DECISIONS.md](DECISIONS.md) | Decisions and reasons | When changing or questioning a decision | 2026-11-15 |
 | [modules/](modules/) | Module details | When touching that module | 2026-11-15 |
@@ -109,30 +108,6 @@ verified_against: <commit>
 
 Domain terms, acronyms, external system names, contracts, and invariants. Link to code for type and function descriptions.
 
-## STATE.md
-
-```markdown
----
-last_verified: 2026-11-15
----
-
-# State
-
-## Focus
-The current work in one line.
-
-## Risks
-What blocks progress or lowers quality.
-
-## Next
-The next 1–3 actions.
-
-## Blocked
-What is blocked and why. "None" if nothing.
-```
-
-Rewrite this file; never append history to it.
-
 ## CONVENTIONS.md
 
 ```markdown
@@ -152,7 +127,7 @@ Environment, versions, prohibitions, external constraints.
 
 ## DECISIONS.md
 
-One file, directly readable. Keep a table of all decisions at the top and one section per decision below. Use `ADR-NNN` IDs. If the file exceeds 300 lines, split by year (`decisions/2026.md`) and keep `DECISIONS.md` as the index.
+One file, directly readable. Keep a table of all decisions at the top and one section per decision below. Use `ADR-NNN` IDs. Split by subject or year when this improves navigation, keeping `DECISIONS.md` as the index.
 
 ```markdown
 ---

@@ -1,11 +1,10 @@
 # context
 
-전역 AI 규칙(`home/.agents/`)을 `~/.agents/`에 설치해, 어떤 프로젝트에서든 `.context/` 기반의 지속 컨텍스트 관리가 동일하게 동작하도록 한다.
+공유 AI 규칙(`home/.agents/`)을 `~/.agents/`에 설치하고, 프로젝트별 `AGENTS.md`에서 선택적으로 활성화해 `.context/`를 관리한다.
 
-- `home/.agents/rules/context.md` (`alwaysApply: true`)가 전역 규칙으로 로드된다.
+- `home/.agents/rules/context.md`는 자동 주입되지 않는다. 적용할 프로젝트에서 명시적으로 읽도록 지시한다.
 - 상세 템플릿은 `home/.agents/rules/context-reference.md`(rulebook)로 분리되어 필요할 때 `rule://context-reference`로 읽는다.
-- 프로젝트 루트에는 정적 규칙 파일(`AGENTS.md`, `RULES.md`, `STRUCT.md`)을 복사하지 않고, 에이전트가 작업 중 작성·갱신하는 `.context/` 파일만 둔다.
-- 설치 시 기존 `~/.agents/skills/` 등 다른 파일은 보존된다.
+- 설치 시 프로젝트에 파일을 복사하지 않으며, 기존 `~/.agents/skills/` 등 다른 파일은 보존된다.
 
 ## 설치
 
@@ -66,17 +65,24 @@ context/
 ├── home/
 │   └── .agents/
 │       └── rules/
-│           ├── context.md            # 전역 alwaysApply 컨텍스트 규칙
+│           ├── context.md            # 프로젝트별로 선택하는 컨텍스트 규칙
 │           └── context-reference.md  # 템플릿/스키마 (rulebook)
 └── .context/                  # 이 저장소 자체 작업 컨텍스트
 ```
 
 ## 워크플로
 
-`omp`가 시작되면 `~/.agents/rules/context.md`가 자동으로 주입된다. 상세 템플릿은 `context-reference.md`(rulebook)로 분리되어 필요할 때 `rule://context-reference`로 읽는다.
+규칙을 사용할 프로젝트의 `AGENTS.md`에 다음 지시를 추가한다. 파일이 없으면 규칙을 적용할 수 없으므로 에이전트가 이를 알린다.
 
-1. 프로젝트 루트에 `.context/`가 없으면 `INDEX.md`, `PROJECT.md`, `ARCHITECTURE.md`, `GLOSSARY.md`, `STATE.md`를 만든다.
-2. 작업 시작 시 위 5개 문서를 읽는다. `modules/`, `DECISIONS.md`는 작업이 건드릴 때만 읽는다.
+```markdown
+Before meaningful work, read `~/.agents/rules/context.md` and follow it. If it is unavailable, report that context rules could not be applied.
+When delegating, instruct each subagent to read and follow the same rule. Collect results and update shared `.context/` files in the main agent.
+```
+
+상세 템플릿은 `context-reference.md`(rulebook)에서 필요할 때 읽는다.
+
+1. 프로젝트 루트에 `.context/`가 없으면 `INDEX.md`, `PROJECT.md`, `ARCHITECTURE.md`, `GLOSSARY.md`를 만든다.
+2. 작업 시작 시 위 4개 문서를 읽고, `modules/`, `DECISIONS.md`는 필요할 때만 읽는다.
 3. 작업 중 바뀐 사실(목적, 구조, 용어, 결정)만 해당 문서에 반영한다.
-4. 작업 완료 시 `journal/YYYY-MM-DD-task-name.md`를 만들고 `journal/INDEX.md`에 행을 추가한다. `STATE.md`는 덮어쓴다.
-5. `journal/`은 완료된 작업을 사람이 보기 위한 기록이며, 에이전트는 과거 조사 때만 읽는다.
+4. 작업 완료 시 `journal/YYYY-MM-DD-task-name.md`를 만들고 `journal/INDEX.md`에 행을 추가한다.
+5. `journal/` 문서는 한국어로, 나머지 `.context/` 문서는 영어로 작성한다. 과거 기록은 조사할 때만 읽는다.

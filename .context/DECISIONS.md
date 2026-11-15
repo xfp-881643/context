@@ -6,12 +6,13 @@ last_verified: 2026-11-15
 
 | ID | 날짜 | 상태 | 결정 |
 |---|---|---|---|
-| ADR-001 | 2026-11-14 | accepted | 전역 규칙은 `~/.agents/AGENTS.md`가 아니라 `~/.agents/rules/context.md`(`alwaysApply: true`)로 둔다. |
+| ADR-001 | 2026-11-14 | superseded | 전역 규칙은 `~/.agents/rules/context.md`에 `alwaysApply: true`로 둔다. |
 | ADR-002 | 2026-11-14 | accepted | 배포는 `bunx skills`가 아니라 `install.sh`(curl/tarball)로 한다. |
-| ADR-003 | 2026-11-15 | accepted | `.context/`를 작업 일지가 아니라 오리엔테이션 중심으로 재설계한다. |
-| ADR-004 | 2026-11-15 | accepted | 히스토리는 `journal/YYYY-MM-DD-task-name.md` + `journal/INDEX.md`로 두고 `archive/`는 두지 않는다. |
-| ADR-005 | 2026-11-15 | accepted | ADR은 `decisions/ADR-*.md`가 아니라 단일 `DECISIONS.md`로 둔다. |
-| ADR-006 | 2026-11-15 | accepted | 규칙·템플릿 파일은 영어, `.context/` 문서는 한국어로 쓴다. |
+| ADR-003 | 2026-11-15 | superseded | `.context/`를 오리엔테이션 중심으로 재설계한다. |
+| ADR-004 | 2026-11-15 | superseded | 히스토리는 `journal/`로 두고 `archive/`는 두지 않는다. |
+| ADR-005 | 2026-11-15 | superseded | ADR은 단일 `DECISIONS.md`로 둔다. |
+| ADR-006 | 2026-11-15 | superseded | `.context/` 문서는 한국어로 쓴다. |
+| ADR-007 | 2026-11-16 | accepted | 프로젝트별 선택 적용, 문서 언어 분리, 고정 줄 수 제거 및 `STATE.md` 필수 요건 제외. |
 
 ## ADR-001: 전역 규칙 위치
 
@@ -30,7 +31,7 @@ last_verified: 2026-11-15
 - 규칙 파일이 시스템 프롬프트 토큰을 차지하므로 짧게 유지해야 한다.
 
 ### Status
-accepted
+superseded by ADR-007
 
 ## ADR-002: 배포 방식
 
@@ -68,7 +69,7 @@ accepted
 - 각 파일에 budget을 두어 누적을 제한한다.
 
 ### Status
-accepted
+superseded by ADR-007
 
 ## ADR-004: journal과 archive
 
@@ -87,7 +88,7 @@ accepted
 - superseded 문서가 제자리에 남아 검색 시 함께 보인다.
 
 ### Status
-accepted
+superseded by ADR-007
 
 ## ADR-005: 단일 DECISIONS.md
 
@@ -106,7 +107,7 @@ accepted
 - 결정이 많아지면 분할 규칙이 필요하다.
 
 ### Status
-accepted
+superseded by ADR-007
 
 ## ADR-006: 문서 언어
 
@@ -123,6 +124,20 @@ accepted
 ### Consequences
 - 규칙은 간결하고, 프로젝트 기록은 읽기 쉽다.
 - 템플릿의 제목은 한국어로 두어 출력 형식을 맞춘다.
+
+### Status
+superseded by ADR-007
+
+## ADR-007: 프로젝트별 선택 적용과 문서 간소화
+
+### Context
+전역 자동 적용은 선택하지 않은 프로젝트에도 규칙을 주입한다. 고정 줄 수 제한은 필요한 내용을 삭제하거나 불필요한 분할을 유도할 수 있다. `STATE.md`의 내용은 다른 문서와 중복될 수 있다.
+
+### Decision
+프로젝트 `AGENTS.md`에서 설치된 `context.md`를 명시적으로 읽고, 위임할 때도 해당 지시를 전달한다. 공유 컨텍스트 갱신은 메인 에이전트가 취합한다. `STATE.md`는 필수 문서에서 제외하고, 고정 줄 수 제한과 superseded 문서의 archive 처리 규칙을 제거한다. `journal/`은 한국어, 나머지 `.context/` 문서는 영어로 작성한다.
+
+### Consequences
+규칙을 선택하지 않은 프로젝트에는 적용하지 않는다. 설치된 규칙 파일이 없으면 적용할 수 없으며, 새 세션과 서브에이전트의 실제 적용 여부를 검증해야 한다. 문서 분할은 줄 수가 아닌 탐색 편의에 따라 판단한다.
 
 ### Status
 accepted
