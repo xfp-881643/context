@@ -1,5 +1,5 @@
 ---
-name: design-change-tracker
+name: design-tracker
 description: >
   Track design changes in Figma or FigCraft across iterations.
   Capture design snapshots, compare them with previous versions,
