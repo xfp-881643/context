@@ -14,3 +14,9 @@ Preserve important discoveries and technical decisions, including verified solut
 - Do not create another memory directory.
 - Do not store credentials, API keys, tokens, or secrets.
 - Context must remain human-readable and agent-independent.
+
+## Restricted Files (Do Not Read or Modify)
+- `.env`, `.env.*` (Refer to `.env.example` instead)
+- `*.pem`, `*.key`
+- `.ssh/`
+- `.docker/`
