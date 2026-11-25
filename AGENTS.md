@@ -6,13 +6,9 @@ Before meaningful work, read `~/.agents/rules/context.md` and follow it. If the 
 
 When delegating, instruct each subagent to read and follow `~/.agents/rules/context.md`. Collect their results and update shared `.context/` files in the main agent to avoid conflicting edits.
 
-Preserve important discoveries and technical decisions, including verified solutions and failed approaches. Update `.context/INDEX.md` when documents are added, removed, or significantly changed.
-
 ## Important
 
-- All persistent project context must be stored in the root `.context/` (global) or the owning subproject's `.context/` (local), per `~/.agents/rules/context.md` Scopes.
 - Do not create another memory directory.
-- Do not store credentials, API keys, tokens, or secrets.
 - Context must remain human-readable and agent-independent.
 
 ## Restricted Files (Do Not Read or Modify)

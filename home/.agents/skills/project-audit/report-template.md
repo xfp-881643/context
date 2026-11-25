@@ -1,9 +1,6 @@
 # Report Template
 
-Use the **full report** for first audits, full-project audits, and any run that fixes
-code. Use the **short report** for focused or incremental audits (`<area>`, `since`,
-`verify`, `apply`) with few findings: keep sections 1, 2, 4, 6, 7, and 8 and omit the
-rest. Always keep section 1's counts and the coverage statement.
+Use the **full report** for first audits, full-project audits, and runs that fix code. Use the **short report** for focused/incremental audits (`<area>`, `since`, `verify`, `apply`) with few findings: keep sections 1, 2, 4, 6, 7, and 8. Always keep section 1's counts and coverage table.
 
 Classification, severity, confidence, status values, and ID rules are defined in
 `severity.md`; do not restate them here.
@@ -140,14 +137,6 @@ write "Baseline report; no previous audit."
 Unresolved risks, external dependencies, and next steps. Distinguish required
 remediation from optional future work.
 
-## 10. Final status
-
-- **Inspected scope:**
-- **Fixes completed:**
-- **Unresolved high-priority findings:**
-- **User decisions required:**
-- **Verification limitations:**
-- **Report location:**
 ```
 
 ---

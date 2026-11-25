@@ -31,7 +31,7 @@ Per subproject, in its own `.context/` (see `~/.agents/rules/context.md` Scopes)
   "export": {"format": "png", "scale": 0.2, "docScale": 0.05},
   "docSha": "",
   "screens": [{
-    "id": 34550, "label": "", "file": "src/pages/home.vue",
+    "id": 34550, "label": "", "file": "src/views/home.tsx",
     "sha": "<last captured>", "appliedSha": "<last implemented>", "confirm": false
   }]
 }
@@ -41,16 +41,11 @@ Per subproject, in its own `.context/` (see `~/.agents/rules/context.md` Scopes)
 - `file` is relative to the subproject. `confirm: true` only after the user confirms the mapping; until then `file` is a guess.
 - Write a journal entry per `context.md` (Korean, `<subproject>/.context/journal/`) after each apply. A task spanning 2+ subprojects goes to the root journal.
 
-### Legacy `.agent/design/`
-
-If `.context/design/screens.json` is missing but `.agent/design/screens.json` exists: `git mv`/move the directory to `.context/design/`, fix the `.gitignore` line (`.agent/design/shots/` → `.context/design/shots/`), then continue. Old files come in three shapes: flat (`name/path/pageId/frameId` at top level), `doc{}`-wrapped, and `doc{}` + `export{scale}`. Read all three; write the canonical shape above. Old files have no `appliedSha`: ask the user once whether the current UI matches the current `sha`; if yes set `appliedSha = sha`.
-
 ## Ready check
 
-1. Read `.context/design/screens.json`. Missing and no legacy file → **baseline**.
+1. Read `.context/design/screens.json`. Missing → **baseline**.
 2. MCP `figcraft` is `figcraft-cli mcp` (headless). Call `open_file` with `doc.path` first; headless has no document otherwise.
 3. Optional: edit the document in the live app. Start `figcraft --control 7979 "<doc.path>"` and run the MCP as `figcraft-cli mcp --attach 7979`. Without a reachable server calls fail with `MCP server not connected: figcraft`.
-4. Call MCP tools from an eval cell: `await tool.mcp__figcraft_export({...})`. The `xd://mcp__figcraft_*` write path drops the arguments (`content is required`).
 
 ## check: what changed
 
@@ -101,7 +96,7 @@ Save the new `sha` and `nodes/<id>.json` after the report. Leave `appliedSha` al
 
 Changed screens only (`sha != appliedSha`).
 
-1. Start the app (`npm run dev`; routes from `src/router/index.ts`).
+1. Start the app's dev server and navigate to the screen's route.
 2. Capture with chrome-devtools MCP at 1440x900; view the design render of the same screen.
 3. List differences, one row each: design value vs current value.
 4. Check against the subproject's `design.md` / `CONVENTIONS.md`. Design contradicts it (new field, renamed term) → ask which wins before editing.
@@ -117,7 +112,7 @@ Order: tokens → shared components → one view per change.
 - Design removed an element → check it is not reused before deleting.
 - Uncertain item: record it, do not guess destructively, ask.
 - Update the written contract (`design.md`) in the same change.
-- Obey the subproject's rules (e.g. `<script setup lang="ts">`, no `any`, API only through `api<T>()`).
+- Obey the subproject's coding conventions (`CONVENTIONS.md`).
 - Verify: project checks (e.g. `npm run type-check && npm run build && npm run lint`) and compare the affected screens visually.
 - Only after verification set `appliedSha = sha` for those screens.
 
@@ -129,7 +124,6 @@ Order: tokens → shared components → one view per change.
 
 ## Limits
 
-- A pixel hash answers *did it change*, never *what changed*; that is the node diff's job.
 - Exports are deterministic (same document and scale → same sha256). Changing `scale` invalidates all hashes. If every screen changes after switching between headless and the app, fonts differ: re-baseline.
 - SVG-imported documents have no layer names or text layers; screen identity is positional and needs one human confirmation.
 - Hidden or off-canvas layers still change the `docSha`.

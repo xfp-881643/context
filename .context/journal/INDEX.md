@@ -4,6 +4,7 @@
 
 | 날짜 | 작업 | 상태 | 태그 |
 |---|---|---|---|
+| 2026-11-25 | [규칙·스킬 불필요 항목 정리 및 ~/.agents 동기화](2026-11-25-prune-rules-and-skills.md) | done | skills, rules, cleanup |
 | 2026-11-25 | [opera-analyzer 박수·무음 이벤트 추가](2026-11-25-opera-analyzer-applause-silence.md) | done | opera-analyzer, skills |
 | 2026-11-16 | [context 문서 규칙 적용](2026-11-16-align-context-documents.md) | blocked | context, rules |
 | 2026-11-16 | [STATE.md 금지 문구 제거](2026-11-16-remove-state-prohibition.md) | done | context, rules |

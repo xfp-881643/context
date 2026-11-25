@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
-import { mkdir, readFile, writeFile, readdir } from "node:fs/promises";
-import { basename, dirname, extname, join, resolve } from "node:path";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { basename, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 
 type Event = {
@@ -84,7 +84,7 @@ Return ONLY valid JSON in this exact shape:
     {
       "start": 0.0,
       "end": 42.5,
-      "kind": "overture|aria|recitative|duet|ensemble|chorus|interlude|dance|spoken|act|scene|other",
+      "kind": "overture|aria|recitative|duet|ensemble|chorus|interlude|dance|spoken|act|scene|applause|silence|other",
       "title": "known title or cautious descriptive label",
       "act": null,
       "scene": null,
@@ -101,7 +101,9 @@ Rules:
 - Recitative may flow directly into an aria; identify both only when a meaningful boundary is audible.
 - Include orchestral introductions/interludes and choruses when distinguishable.
 - The 15-second overlap with neighboring chunks is intentional. Describe partial events at segment edges, but note if the event clearly began before or continues after this segment.
-- Do not force events to fill the entire segment. Silence and uncertain transitions may be left unassigned.
+- Mark audience applause, cheering, or bravos as kind "applause" (title "Applause"). Applause usually ends the preceding number; do not extend that number into the applause.
+- Mark clearly audible silence (no music, singing, or applause; near-silent room tone only) of 2 seconds or longer as kind "silence" (title "Silence"). Ignore shorter gaps such as breaths, caesuras, and general pauses within the music.
+- Do not label applause or silence as "other". Do not force remaining time to be filled; uncertain transitions may be left unassigned.
 - Confidence must be between 0 and 1.
 - Use an empty events array if no defensible section boundary can be identified.`;
 
@@ -172,8 +174,6 @@ function normalizeAndMerge(events: Event[], duration: number): Event[] {
     const near = previous ? current.start <= previous.end + 8 : false;
 
     if (previous && (sameKind && similarTitle) && (overlap > 0 || near)) {
-      const oldLength = previous.end - previous.start;
-      const newLength = current.end - current.start;
       previous.start = Math.min(previous.start, current.start);
       previous.end = Math.max(previous.end, current.end);
       previous.confidence = Math.max(previous.confidence, current.confidence);
@@ -194,6 +194,7 @@ const KIND_KO: Record<string, string> = {
   act: "막", scene: "장면", aria: "아리아", recitative: "레치타티보",
   duet: "이중창", ensemble: "중창", chorus: "합창", overture: "서곡",
   interlude: "간주곡", dance: "무곡", spoken: "대사", other: "기타",
+  applause: "박수", silence: "무음",
   section: "음악 구간", number: "독립 음악 번호",
 };
 

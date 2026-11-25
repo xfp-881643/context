@@ -5,7 +5,7 @@ globs: .context/**
 
 # Context Reference
 
-Read this when creating or updating `.context/` documents. Write `journal/` documents in Korean, translating the journal templates below, and all other `.context/` documents in English. Keep code identifiers, paths, commands, and external API names as-is.
+Read this when creating or updating `.context/` documents. Follow the language rule in `context.md` (translate journal templates to Korean).
 
 ## INDEX.md
 
