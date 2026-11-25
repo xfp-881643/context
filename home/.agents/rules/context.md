@@ -21,17 +21,27 @@ Write `.context/journal/` documents in Korean and all other `.context/` document
 - Reference (read on demand): `CONVENTIONS.md`, `DECISIONS.md`, `modules/*.md`.
 - History (read only when investigating): `journal/INDEX.md`, `journal/YYYY-MM-DD-task-name.md`.
 
+## Scopes
+- Root `.context/` (workspace root) = global: purpose, cross-project architecture, shared glossary, cross-cutting decisions, and a subproject map (name, path, one-line role).
+- Subproject `.context/` (`<subproject>/.context/`) = local: only that subproject's purpose, architecture, glossary, conventions, decisions, modules, journal.
+- A subproject is a directory with its own build manifest or independent deliverable. Create its `.context/` the first time a task works there.
+- One fact, one scope. If it applies to 2+ subprojects, put it in root. Otherwise local. Local docs link to root; never copy it.
+- Scope of a task = the subproject(s) whose files you change, not your cwd.
+
 ## Read protocol
-1. If `.context/` is missing, create the orientation documents using verified project information.
-2. Read `INDEX.md`, `PROJECT.md`, `ARCHITECTURE.md`, `GLOSSARY.md`.
-3. Read reference docs only for the modules and decisions the task touches.
+1. Read root orientation docs (`INDEX.md`, `PROJECT.md`, `ARCHITECTURE.md`, `GLOSSARY.md`).
+2. For each subproject the task touches, read its `.context/` orientation docs too.
+3. Read reference docs only for the modules and decisions the task touches. Never read sibling subprojects' `.context/`.
 4. Do not read `journal/` unless investigating a past change.
+5. If a needed `.context/` is missing, create orientation docs from verified information.
 
 ## Write protocol
-1. At task end, create `journal/YYYY-MM-DD-task-name.md` and add a row to `journal/INDEX.md`.
-2. Update `PROJECT.md`, `ARCHITECTURE.md`, or `GLOSSARY.md` only when a fact changed.
-3. Add a decision to `DECISIONS.md` when a non-obvious choice is made.
-4. Keep only necessary information; remove duplication and split documents when it improves navigation.
+1. Task touches one subproject: write journal, decisions, and fact updates to that subproject's `.context/` only.
+2. Task spans 2+ subprojects or changes shared contracts: write the journal and decision to root, and add one-line pointers in each affected subproject journal.
+3. Journal file: `<scope>/.context/journal/YYYY-MM-DD-task-name.md` plus a row in that scope's `journal/INDEX.md`.
+4. Update `PROJECT.md`, `ARCHITECTURE.md`, `GLOSSARY.md` only when a fact changed, in the scope that owns the fact.
+5. New or removed subproject: update the root subproject map.
+6. Keep only necessary information; remove duplication and split documents when it improves navigation.
 
 ## Freshness
 - Frontmatter: `last_verified: YYYY-MM-DD`, `verified_against: <commit>`.

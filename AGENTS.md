@@ -10,7 +10,7 @@ Preserve important discoveries and technical decisions, including verified solut
 
 ## Important
 
-- All persistent project context must be stored in `.context/`.
+- All persistent project context must be stored in the root `.context/` (global) or the owning subproject's `.context/` (local), per `~/.agents/rules/context.md` Scopes.
 - Do not create another memory directory.
 - Do not store credentials, API keys, tokens, or secrets.
 - Context must remain human-readable and agent-independent.
