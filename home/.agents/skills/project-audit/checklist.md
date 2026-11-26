@@ -24,8 +24,6 @@ Record one row per **section** in the report's coverage table (`report-template.
 7. **Maintainability**: coherent responsibilities, drifted duplicate implementations, misleading abstractions, dead code (verified per `SKILL.md` Step 3), legacy/compat justification, diagnostic quality of errors/logs.
 8. **Dependencies & configuration**: unused deps, lockfile consistency, runtime vs dev split, deprecated/vulnerable deps (via lockfile tools or `NOT VERIFIED`), license conflicts, build/deploy config parity, safe reproducible defaults.
 9. **Tests & delivery**: critical path & failure-mode coverage, determinism/isolation, static analysis/lint/type checks, reproducible build/package, working README commands.
-10. **Operational readiness** *(if applicable)*: health checks, secret-free logs/metrics, failure/restart recovery, resource limits, deploy vs runtime config alignment.
-11. **Documentation accuracy**: README/architecture/setup vs actual code, documented flags/env vars/endpoints exist, `.context/` matches code and flags stale docs.
-12. **CI/CD pipeline** *(conditional)*: least-privilege tokens, pinned third-party actions/images, safe secret injection, fork/PR isolation, parity with documented build/test/release.
-13. **IaC & containers** *(conditional)*: non-root images, minimal exposed ports/volumes, pinned base images, resource limits/probes/restart policies, IAM/network least privilege, config parity.
-14. **User-facing interfaces** *(conditional)*: basic accessibility (labels, keyboard, contrast), localization (if multi-locale), error/empty states, client/server validation agreement.
+10. **Documentation accuracy**: README/architecture/setup vs actual code, documented flags/env vars/endpoints exist, `.context/` matches code and flags stale docs.
+11. **Operations, CI/CD & infrastructure** *(conditional)*: health checks, secret-free logs/metrics, failure/restart recovery, resource limits; least-privilege CI tokens, pinned actions/images, safe secret injection, fork/PR isolation; non-root containers, minimal ports/volumes, IAM/network least privilege; deploy vs runtime config parity.
+12. **User-facing interfaces** *(conditional)*: basic accessibility (labels, keyboard, contrast), localization (if multi-locale), error/empty states, client/server validation agreement.

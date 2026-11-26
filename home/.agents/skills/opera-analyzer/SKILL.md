@@ -13,7 +13,7 @@ Requires `bun`, `ffmpeg`, `ffprobe`, and `OPENROUTER_API_KEY`.
 
 ```bash
 bun run scripts/analyze.ts /path/to/recording.mp3
-# Optional: --chunk-seconds 300 --overlap-seconds 15
+# Optional (override the env vars below): --chunk-seconds 300 --overlap-seconds 15
 ```
 
 Environment variables:
@@ -22,6 +22,7 @@ Environment variables:
 - `OPENROUTER_TRANSLATION_MODEL` (default `google/gemini-2.5-flash`)
 - `OPENROUTER_BASE_URL` (default `https://openrouter.ai/api/v1`)
 - `OPERA_OUTPUT_DIR` (default `./opera-analysis`)
+- `OPERA_CHUNK_SECONDS` (default `300`), `OPERA_OVERLAP_SECONDS` (default `15`)
 
 ## Outputs
 

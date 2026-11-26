@@ -14,7 +14,7 @@ Design keeps changing; the user will not always say what changed. Detect the del
 
 ## State
 
-Per subproject, in its own `.context/` (see `~/.agents/rules/context.md` Scopes). A design applies to one subproject; never write this state to the root `.context/`.
+Per subproject, in its own `.context/`. A design applies to one subproject; never write this state to the root `.context/`.
 
 ```text
 <subproject>/.context/design/
@@ -39,7 +39,6 @@ Per subproject, in its own `.context/` (see `~/.agents/rules/context.md` Scopes)
 
 - `sha != appliedSha` → design captured but not implemented yet. This is the pending list. It survives later captures.
 - `file` is relative to the subproject. `confirm: true` only after the user confirms the mapping; until then `file` is a guess.
-- Write a journal entry per `context.md` (Korean, `<subproject>/.context/journal/`) after each apply. A task spanning 2+ subprojects goes to the root journal.
 
 ## Ready check
 
@@ -53,12 +52,12 @@ For each screen, re-export at `export.scale` and hash:
 
 ```js
 for (const s of screens) {
-  await tool.mcp__figcraft_export({ids:[s.id], format:'png', scale:0.2,
+  await tool.mcp__figcraft_export({ids:[s.id], format: export.format, scale: export.scale,
     path:`<repo>/.context/design/shots/${s.id}.png`});
 }
 ```
 
-`sha256sum` the PNGs; also export `frameId` at `docScale` for `docSha`. Report `id | label | file | changed?`.
+`sha256sum` the PNGs; also export `frameId` at `export.docScale` for `docSha`. Report `id | label | file | changed?`.
 
 - screen `sha` differs → **changed**.
 - `docSha` differs, no screen differs → layer added, moved outside a screen, or new screen: run **discover**.
@@ -87,9 +86,9 @@ Save the new `sha` and `nodes/<id>.json` after the report. Leave `appliedSha` al
 
 `inspect_document` / `get_node` responses over ~500 lines are elided; do not read 400+ children in one call.
 
-1. `tool.mcp__figcraft_screenshot({})`, or export the frame at 0.05.
+1. `tool.mcp__figcraft_screenshot({})`, or export the frame at `export.docScale`.
 2. A screen is a visually separated block. Get its id from `get_node` of a known neighbour, or select it on the canvas.
-3. Export candidates at scale 0.2, view them, add each with `label`, `file`, `sha`, `confirm: false`.
+3. Export candidates at `export.scale`, view them, add each with `label`, `file`, `sha`, `confirm: false`.
 4. Many candidates: render a `contact.html` grid of `shots/`, serve with `bun`, screenshot once.
 
 ## review: design vs running UI
@@ -101,7 +100,7 @@ Changed screens only (`sha != appliedSha`).
 3. List differences, one row each: design value vs current value.
 4. Check against the subproject's `design.md` / `CONVENTIONS.md`. Design contradicts it (new field, renamed term) → ask which wins before editing.
 
-Split findings into required, optional, uncertain. Do not put unrelated items in one plan.
+Split findings into required, optional, uncertain.
 
 ## apply: minimal change
 
@@ -112,14 +111,13 @@ Order: tokens → shared components → one view per change.
 - Design removed an element → check it is not reused before deleting.
 - Uncertain item: record it, do not guess destructively, ask.
 - Update the written contract (`design.md`) in the same change.
-- Obey the subproject's coding conventions (`CONVENTIONS.md`).
 - Verify: project checks (e.g. `npm run type-check && npm run build && npm run lint`) and compare the affected screens visually.
 - Only after verification set `appliedSha = sha` for those screens.
 
 ## baseline
 
 1. `open_file` the document; `inspect_document`: record `name`, `path`, `pageId`, frame id and size.
-2. Identify screens (**discover**), export each at 0.2, hash, save trees, write `screens.json` with `docSha`.
+2. Identify screens (**discover**), export each at `export.scale`, hash, save trees, write `screens.json` with `docSha`.
 3. If the UI already matches the design, set `appliedSha = sha`; else leave it unset so everything shows as pending.
 
 ## Limits

@@ -4,6 +4,7 @@
 
 | 날짜 | 작업 | 상태 | 태그 |
 |---|---|---|---|
+| 2026-11-26 | [저장소 스킬 중복 정리 (project-audit, paseo-loop, design-sync, opera-analyzer)](2026-11-26-prune-other-skills.md) | done | skills, cleanup |
 | 2026-11-26 | [`code-structure`를 코딩 중 파일 분리 규칙으로 전환](2026-11-26-code-structure-coding-mode.md) | done | skills, code-structure |
 | 2026-11-26 | [`code-structure` 스킬 중복·충돌 항목 정리](2026-11-26-prune-code-structure-skill.md) | done | skills, code-structure, cleanup |
 | 2026-11-26 | [`code-structure` 통합 스킬 생성](2026-11-26-merge-code-structure-skill.md) | done | skills, code-structure |

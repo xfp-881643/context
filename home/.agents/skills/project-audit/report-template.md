@@ -1,6 +1,6 @@
 # Report Template
 
-Use the **full report** for first audits, full-project audits, and runs that fix code. Use the **short report** for focused/incremental audits (`<area>`, `since`, `verify`, `apply`) with few findings: keep sections 1, 2, 4, 6, 7, and 8. Always keep section 1's counts and coverage table.
+Use the **full report** for first audits, full-project audits, and runs that fix code. Use the **short report** for focused/incremental audits (`<area>`, `since`, `apply`) with few findings: omit section 3. Always keep section 1's counts and coverage table.
 
 Classification, severity, confidence, status values, and ID rules are defined in
 `severity.md`; do not restate them here.
@@ -52,15 +52,9 @@ and optional observations.
 |---|---|---|---|
 | ... | ... | ... | ... |
 
-## 3. Architecture overview
+## 3. Architecture notes
 
-Only what is useful for understanding findings and future audits.
-
-- **Applications / services:**
-- **Interfaces and integrations:**
-- **Data and persistence:**
-- **Build, test, and deployment:**
-- **Important workflows and trust boundaries:**
+Link `.context/ARCHITECTURE.md`; do not copy it. Record only facts the findings depend on that it lacks or gets wrong (and flag those as documentation findings).
 
 ## 4. Findings
 
@@ -80,17 +74,7 @@ Only what is useful for understanding findings and future audits.
 Repeat per finding. Keep unrelated issues separate. Apply "Sensitive findings" from
 `severity.md` to security and secret findings.
 
-## 5. Changes made
-
-| Location | Change | Finding ID | Reason |
-|---|---|---|---|
-| `path/to/item` | actual change | AUD-YYYYMMDD-001 | why |
-
-Only changes made during this audit; write `None` in read-only mode. Mention files
-deliberately left untouched when that explains a review decision (for example,
-files with pre-existing uncommitted changes).
-
-## 6. Verification
+## 5. Verification
 
 ### Baseline (before any change)
 
@@ -100,9 +84,10 @@ files with pre-existing uncommitted changes).
 
 ### After changes
 
+Project-level checks after all fixes; per-fix checks go in each finding's **Verification** field.
+
 | Check | Command or method | Result | Notes |
 |---|---|---|---|
-| Focused test | `...` | PASS / FAIL / NOT RUN | ... |
 | Static analysis / type check | `...` | PASS / FAIL / NOT RUN | ... |
 | Full test suite | `...` | PASS / FAIL / NOT RUN | ... |
 | Build / package | `...` | PASS / FAIL / NOT RUN | ... |
@@ -111,7 +96,7 @@ files with pre-existing uncommitted changes).
 Exact commands where possible. State unavailable services, tools, credentials, or
 environment limitations. A passing build does not prove runtime correctness.
 
-## 7. Review required
+## 6. Review required
 
 For each decision needing user input:
 
@@ -123,7 +108,7 @@ For each decision needing user input:
 
 Make the decision understandable without requiring the user to rediscover the issue.
 
-## 8. Previous audit comparison
+## 7. Previous audit comparison
 
 | Finding ID | Previous status | Current status | Evidence / notes |
 |---|---|---|---|
@@ -131,12 +116,6 @@ Make the decision understandable without requiring the user to rediscover the is
 
 List newly discovered findings and regressions. Retain original IDs. First audit:
 write "Baseline report; no previous audit."
-
-## 9. Remaining risks and follow-up
-
-Unresolved risks, external dependencies, and next steps. Distinguish required
-remediation from optional future work.
-
 ```
 
 ---
