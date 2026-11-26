@@ -11,6 +11,14 @@ When delegating, instruct each subagent to read and follow `~/.agents/rules/cont
 - Do not create another memory directory.
 - Context must remain human-readable and agent-independent.
 
+## Required Skills and Guidelines
+
+Before starting any code task, read these skills and follow their rules. If a file can't be read, stop and report.
+- code-structure: ~/.agents/skills/code-structure/SKILL.md (modularization/structure)
+- ponytail (ultra): ~/.agents/skills/ponytail/SKILL.md
+- caveman (ultra): ~/.agents/skills/caveman/SKILL.md (response compression)
+On conflict, priority: code-structure > ponytail > caveman. Response language: Korean.
+
 ## Restricted Files (Do Not Read or Modify)
 - `.env`, `.env.*` (Refer to `.env.example` instead)
 - `*.pem`, `*.key`
